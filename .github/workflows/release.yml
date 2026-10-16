@@ -108,7 +108,10 @@ jobs:
           if git ls-files --modified --others | grep -q bun.lock; then
             git add bun.lock
           fi
-          git commit -m "chore: release v${VERSION}"
+          # The first release can ship the version package.json already has.
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: release v${VERSION}"
+          fi
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
           git push origin HEAD:main
